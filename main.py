@@ -52,3 +52,19 @@ app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.TEXT, download))
 
 app.run_polling()
+
+
+import os
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
+import threading
+
+def serve():
+    # Render ఇచ్చే Port ని తీసుకుంటుంది, లేదంటే 8080 వాడుతుంది
+    port = int(os.environ.get("PORT", 8080))
+    with TCPServer(("0.0.0.0", port), SimpleHTTPRequestHandler) as httpd:
+        httpd.serve_forever()
+
+# బాట్ స్టార్ట్ అయ్యే ముందు ఈ సర్వర్‌ని బ్యాక్‌గ్రౌండ్‌లో రన్ చేస్తుంది
+threading.Thread(target=serve, daemon=True).start()
+
